@@ -1,14 +1,26 @@
 import "./style.scss";
+import { Engine, MeshBuilder, Scene, Vector3 } from "@babylonjs/core";
 
 const main = async () => {
   const renderCanvas = document.getElementById(
     "renderCanvas"
-  ) as HTMLCanvasElement;
+  ) as HTMLCanvasElement | null;
   if (!renderCanvas) {
     return;
   }
 
-  console.log("hi");
+  const engine = new Engine(renderCanvas, true);
+  const scene = new Scene(engine);
+
+  scene.createDefaultCameraOrLight(true, true, true);
+  scene.createDefaultEnvironment();
+
+  const box = MeshBuilder.CreateBox("box", { size: 0.1 });
+  box.position = new Vector3(0, 0.05, 0);
+
+  window.addEventListener("resize", () => engine.resize());
+  engine.runRenderLoop(() => scene.render());
 };
 
 main();
+
